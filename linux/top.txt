@@ -1,0 +1,10 @@
+#查看某个进程pid
+pidof java
+
+#top根据进程号单独查看某个进程
+top -p pid
+
+#top按CPU占用率
+top之后按P
+#top按内存使用率
+top之后按M

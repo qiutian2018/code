@@ -1,0 +1,31 @@
+一切的开始SAPI接口，脚本执行的开始都是以SAPI接口实现开始的
+
+PHP开始执行后会经过2个主要的阶段:处理请求之前的开始阶段和请求之后的结束阶段
+开始阶段：
+第一个过程是模块初始化阶段（MINIT），该过程只进行一次
+第二个过程是模块激活阶段（RINIT）
+
+结束阶段：
+两个环节，第一个在请求结束后停用模块(RSHUTDOWN，对应RINIT)， 另一个在SAPI生命周期结束（Web服务器退出或者命令行脚本执行完毕退出）时关闭模块(MSHUTDOWN，对应MINIT)。
+
+在CLI模式下可以通过-c参数指定此路径（在php的命令参数中-c表示在指定的路径中查找ini文件
+
+php.ini扩展
+windows系统开启xx.dll
+linux系统开启xx.so或者在编译阶段将xx模块编译进去,那在php.ini文件中就不需要开启xx.so
+
+
+PHP关闭请求的过程是一个若干个关闭操作的集合，这个集合存在于php_request_shutdown函数中。 这个集合包括如下内容：
+调用所有通过register_shutdown_function()注册的函数。这些在关闭时调用的函数是在用户空间添加进来的。 一个简单的例子，我们可以在脚本出错时调用一个统一的函数，给用户一个友好一些的页面，这个有点类似于网页中的404页面。
+执行所有可用的__destruct函数。 这里的析构函数包括在对象池（EG(objects_store）中的所有对象的析构函数以及EG(symbol_table)中各个元素的析构方法。
+将所有的输出刷出去。
+发送HTTP应答头。这也是一个输出字符串的过程，只是这个字符串可能符合某些规范。
+遍历每个模块的关闭请求方法，执行模块的请求关闭操作，这就是我们在图中看到的Call each extension's RSHUTDOWN。
+销毁全局变量表（PG(http_globals)）的变量。
+通过zend_deactivate函数，关闭词法分析器、语法分析器和中间代码执行器。
+调用每个扩展的post-RSHUTDOWN函数。只是基本每个扩展的post_deactivate_func函数指针都是NULL。
+关闭SAPI，通过sapi_deactivate销毁SG(sapi_headers)、SG(request_info)等的内容。
+关闭流的包装器、关闭流的过滤器。
+关闭内存管理。
+重新设置最大执行时间
+

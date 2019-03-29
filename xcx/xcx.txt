@@ -1,0 +1,9 @@
+小程序调试
+
+web工具调试的时候使用小程序的appid+appsecret获取用户openid返回40029错误，检查appid跟appsecret是否正确，测试的微信号是否绑定成为该小程序的开发者！开发者工具中清除缓存！添加项目的时候填哪个appid就要在获取openid的时候用哪个小程序的appid+appsecret
+卖家版appid:wx4ad35d3a6b70926a
+配置流程：添加项目的时候填写对应店铺的appid,并修改app.js里面店铺shopid与shopkey的配置
+
+被三方授权的配置：添加项目时的appid实则是第三方模板号appid :wx06c46fbf821113d1
+
+代理工具Charles

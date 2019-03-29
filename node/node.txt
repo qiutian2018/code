@@ -1,0 +1,51 @@
+node path:
+	•	Node.js v10.13.0 to /usr/local/bin/node
+	•	npm v6.4.1 to /usr/local/bin/npm
+
+vue-cli path:
+	/usr/local/bin/vue -> /usr/local/lib/node_modules/vue-cli/bin/vue
+    /usr/local/bin/vue-list -> /usr/local/lib/node_modules/vue-cli/bin/vue-list
+    /usr/local/bin/vue-init -> /usr/local/lib/node_modules/vue-cli/bin/vue-init
+
+
+vue -V
+
+vue init webpack my-project
+=>Pick a test runner=>Karma and Mocha
+
+cd my-protect
+
+npn install karma-chrome-launcher --save-dev
+=>test/unit/karma.conf.js修改browers为Chrome
+
+安装单元测试工具库
+npm install --save-dev vue-test-utils
+
+npm run unit
+
+
+
+npm install
+npm run dev
+
+
+
+To have launchd start mongodb now and restart at login:
+  brew services start mongodb
+Or, if you don't want/need a background service you can just run:
+  mongod --config /usr/local/etc/mongod.conf
+
+
+
+  npm search wx-server-sdk
+
+  npm view wx-server-sdk
+
+  npm install wx-server-sdk
+
+  npm list
+
+  npm uninstall xxx
+
+  npm update xxx
+

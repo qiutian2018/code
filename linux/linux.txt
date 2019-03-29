@@ -1,0 +1,133 @@
+linux查看文件编码
+file aa.sql
+递归压缩article文件夹到本目录article20170303.zip
+zip -r article20170303.zip article
+
+yum install -y lrzsz
+下载sz /var/local/data.sql
+上传rz
+
+查看磁盘容量大小df -k
+查看文件夹大小du -h images/
+
+查看端口是否开启netstat -lnp
+ftp连接不上,修改连接模式为主动模式,使用ftp连接，查看配置
+
+查找find / -name Config.php
+amh修改mysql密码，修改/usr/local/amh-5.3/web/Amysql/Config.php文件
+mysql配置文件目录/usr/local/mysql-5.5/my.cnf
+
+
+查看tcp连接数
+netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
+
+查看php进程数
+netstat -anpo|grep "php-fpm"|wc -l
+
+whereis php-fpm查看php-fpm安装位置
+
+查看环境变量echo $PATH
+添加环境变量vi /etc/profile
+使修改生效source /etc/profile
+
+centos安装zip unzip
+yum install -y unzip zip
+解压zip包
+unzip xx.zip
+
+
+安装svn
+创建一个svn目录 /home/svn
+创建svn仓库 /home/svn/flower
+进入版本仓库配置参数cd /home/svn/flower/conf
+添加到守护进程自启动 vi /etc/rc.local
+#run svn
+svnserve -d -r /home/svn
+测试svn checkout svn://47.90.46.227/flower
+使用tortoiseSVN添加文件
+
+du -sh aa.jpg
+
+du -a 
+
+导出 du -a > liebiao.txt
+
+查看容量
+df -k
+
+df -k /data
+
+服务器之间文件传输
+scp  source_file_path root@10.127.40.25:/home/test
+文件夹传输
+scp -r  source_path root@10.127.40.25:/home/test
+文件夹下所有文件传输(不包括文件夹本身)
+scp -r  source_path/* root@10.127.40.25:/home/test
+
+有问题用man手册
+连接文件大的小是原文件名的长度
+
+文件删除
+unlink 原文件的链接数-1 只要当原文件的链接数为0时 文件才是真的被删除 文件的内容不复存在
+
+如果一个原文件有多个链接文件，删除其中一个并没有把文件内容删掉 
+
+ll -d 目录名 查看目录属性
+
+删除乱码文件、目录
+ls -i 找到乱码文件节点
+find -inum 节点号 -exec rm -rf {} \;
+
+zip打包文件
+zip -r -q -o test.zip  ./test
+解压到指定目录
+unzip -q test.zip -d ziptest
+
+unrar e aaa.rar 解压带当前目录
+
+unrar l aaa.rar 列出文件
+
+vim 查找
+/keyword 按enter键之后按n或者N 向前向后查找
+
+#cat
+多行输入的内容单行输出
+cat dd.txt | xargs
+
+kill nginx<TAB>
+
+从完整路径中获取最后一个'/'之后的内容
+basename /usr/local/www/
+
+xargs命令用于将当前一条命令的输出作为后一条命令的 参数
+
+当前目录下所有.txt文件列表的输出作为后面命令basename的参数,用sort按字母序排序
+find . -name '*.txt' | xargs basename | sort
+
+列出这些文件内容
+find . -name '*.txt' | xargs basename | sort | xargs cat | less
+
+大于100k的.txt结尾的文件
+find . -name '*.txt' -size +100k
+
+大于50k 小于100k的文件
+find . -name '*.txt' -size +50k -size -100k
+
+24小时内 -mtime 0
+find . -name '*.txt' -mtime 0
+
+信息带文件大小
+ls -lh
+
+curl https://quanminyule.top
+curl https://quanminyule.top -l
+curl https://quanminyule.top -l -v
+
+curl -X POST https://quanminyule.top -d "{\"name\":\"zhangsan\"}"
+
+vim界面
+crtl+] 跳转到定义行
+ctrl+t 回到上一次查看位置
+
+查询多个关键字,注意|两边不要有空格
+grep -E 'a|b|c'

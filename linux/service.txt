@@ -1,0 +1,66 @@
+
+runlevel	查看系统级别
+
+init 3	改变运行级别
+
+init 0或init 6或shutdown		关机,前两者不稳定
+
+/etc/inittab  默认运行级别配置文件
+
+linux的服务：
+1、rpm包默认安装的服务
+	a.独立的服务：放在内存中,直接被内存管理
+	b.基于xinetd服务：超级守护进程,管理后台进程,占有量越来越小,逐渐退出市场
+2、源码包安装的服务
+
+chkconfig --list 查看管理的服务列表(rpm包安装的服务) 服务的自启动状态,服务到底有没有启动不能通过这个列表查看
+
+修改自启动配置：二选一,否则会启动两次,报错
+a、chkconfig --level 2345 httpd on 修改自启动配置
+b、/etc/rc.d/rc.local 文件修改自启动配置
+c、ntsysv 命令方式修改自启动服务(非CentOs不一定有)
+
+/etc/services 系统常规端口说明列表
+
+netstat -tlunp	当前已启动的端口
+
+rpm默认安装位置：
+/etc/init.d/	启动脚本位置
+/etc/sysconfig/	初始化环境配置文件位置
+/etc/	配置文件位置
+/etc/xinetd.conf	xinetd配置文件
+/etc/xinetd.d/	基于xinetd服务的启动脚本
+/etc/lib/	服务产生的数据
+/etc/log/	日志
+
+mount	查看挂载信息
+
+service 命令不能启动源码包安装的服务,因为service默认去/etc/rc.d/init.d/ 目录下找相关文件
+
+基于xinetd服务的管理：
+安装xinetd服务
+yum -y install xinetd
+
+/etc/xinetd.d/
+
+vi /etc/xinetd.d/rsync xinetd服务的启动配置文件
+
+service xinetd restart 修改完配置文件之后,重启xinetd服务
+
+chkconfig rsync on 基于xinetd的服务自其中方式不需要指定启动级别
+
+chkconfig rsync off 关闭自启动的时候,服务也关闭了,这是跟独立的服务区别的地方
+
+源码包服务：
+/etc/rc.d/rc.local 源码包服务的自启动方式只能通过这种方式
+
+源码包的服务想通过service去管理,用软连接的方式
+ln -s /xx/xx/xx/apachectl /etc/init.d/apachectl
+service apachectl start
+
+让源码包的服务能被chkconfig与ntsysv命令管理自启动：不提倡把源码包服务管理加入到rpm的服务管理中
+1、vi /etc/init.d/apachectl
+#chkconfig:35 86 76		加入这行,这行不是注释!!!  chkconfig:运行级别 启动顺序 关闭顺序
+
+2、chkconfig --add apachectl 	把源码包apachectl加入chkconfig命令
+

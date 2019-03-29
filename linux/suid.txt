@@ -1,0 +1,36 @@
+cho
+!慎重操作，否则容易将服务器拱手送人 尽量通过其他方法达到类似的权限控制效果
+
+SetUID  仅针对文件
+SetGID	针对文件和目录
+Sticky BIT  粘着位 仅针对目录
+
+SetUID
+-rwxrwxr-- abc
+执行命令的时候必须有对这个目录的x权限
+chmod 4755 abc
+-rwsrwxr-- abc
+
+-rwxr--r-- abc.txt
+执行命令的时候没有这个文件的x权限
+chmod 4644
+-rwSr--r-- abd.txt S表示不能正常执行
+s = S + x
+
+suid命令执行者在执行该程序的过程中获得文件属主的权限
+
+suid权限只在该程序执行过程中有效
+
+chmod u+s abc 给文件所有者的suid权限
+
+SetGUID
+chmod 2755
+chmod 2644
+chmod g+s abc 给文件所属组的suid权限
+
+Sticky BIT
+chmod o+s abc 给文件其他人的suid权限
+
+chattr +i
+i 对文件设置i属性,不允许对文件进行删除改名,也不能添加和修改数据;如果对目录设置i属性,那么只能修改目录下文件的数据,但允许建立和删除文件
+a 对文件设置a,只能在文件中添加数据,但不能删除、修改数据(不能用vi方式,只能用echo追加方式);如果对目录设置a属性,那么直允许在目录中建立和修改文件,但是不允许删除

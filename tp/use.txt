@@ -1,0 +1,81 @@
+#tp技巧
+
+think\facade\Request::param()   获取参数
+
+fetchSql()
+用户返回sql,适用于任何CURD。使用位置在model之后,CURD之前,Db::name('xxx')->fetchSql(true)->select()
+配合EXIST等等构建子查询
+
+getLastSql() 返回最后一次执行的sql,Db::name('xxx')->getLastSql();
+
+Db::name('xxx')->where(['id'=>[1,2,3])->select(); <=>Db::name('xxx')->where('id','IN',[1,2,3])->select() ##thinkphp5
+
+#thinkphp 5 值不为NULL
+$list = Db::name('xxx')->where('openid', 'eq', 'aaa')->where('order_id', 'not null')->select();
+
+#thinkphp 5.0.19+
+#按主键查询单条数据
+UserModel::get(1);
+UserModel::getById(1);
+#按字段键值对查单条数据
+UserModel::get(['name'=>'zhangsan']);
+UserModel::getByName('zhangsan');
+#按主键查所有数据
+UserModel::all();
+#按主键查询多条数据
+UserModel::all([1,2,3]);
+UserModel::all(['id'=>[1,2,3]]);
+#按字段键值对查多条数据
+UserModel::all(['name'=>'张三');
+UserModel::all(['name'=>['张三','张三2']);
+#闭包查询
+UserModel::get(function($query){
+    where(['name'=>'zhangsan'])
+});
+UserModel::all(function($query){
+    where(['status'=>1])->limit(3)->order('id','desc');
+});
+#查询某个字段,只能查一个字段,不能用get()或all(),只能用where()限定条件
+UserModel::where(['id'=>1])->value('name');
+#查询字段映射
+UserModel::where(['status'=>1])->column('id,name');
+#查询结果转数组
+$model->select()->toArray();
+$model->find()->toArray();
+#获取器 get{大驼峰法字段}Attr($val)
+model里面定义status字段的获取器
+public function getStatusAttr($val)
+{
+    $statusMap = [0=>'失败',1=>'成功'];
+    return $statusMap[$val];
+}
+使用:
+$info = UserModel::get(1);
+$info = $model->find(1);
+echo $info->status;
+
+定义group_openid获取器
+public function getGroupOpenidAttr($val)
+{
+    $map = [1=>'haha','2'=>'hahahh2'];
+    return $map[$val];
+}
+echo $info->group_openid;
+
+获取原始数据
+echo $info->getData('status');
+echo $info->getData('group_openid')
+获取全部原始数据
+echo $info->getData();
+
+全部获取器
+var_dump($info->toArray());
+
+不存在的字段获取器,表中无status_txt字段
+public function getStatusTxtAttr($val,$dats)
+{
+    #注意$val即使没有用到也不能省略
+    $map = [0=>'失败',1=>'成功'];
+    return $map[$data['status'];
+}
+echo $info->status_txt;

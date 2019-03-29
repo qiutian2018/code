@@ -1,0 +1,98 @@
+
+shell 变量
+
+testvar="first"		变量名紧跟=,后面跟值
+
+testvat="$testvar"newvalue	变量值的叠加
+
+echo $testvar	使用变量的时候需要加上$,创建的时候不需要$
+
+set	查看所有变量
+
+set -u
+
+unset testvar	删除变量
+
+pstree	查看进程数
+
+export 变量名  声明一个变量为环境变量
+
+子shell 父shell
+
+环境变量：
+
+env	查看环境变量
+
+$PATH	系统环境变量
+
+$PS1	用户登录状态的环境变量
+
+语系变量:
+
+locale 查看语系变量
+
+$LANG 当前语系
+
+locale -a | more 查看所有语系
+
+/etc/sysconfig/i18n	语系变量LANG配置文件
+
+linux中文支持：
+
+前提条件:正确安装的中文字体和中文语系
+
+shell变量的求和运算,用双小括号括起来
+
+./cal.sh 100 200
+	  $0 $1  $2
+#!/bin/bash
+num1=$1
+num2=$2
+sum=$((num1+num2))
+echo $sum
+
+chmod 755 cal.sh
+
+./cal.sh 100 200
+
+$* 所有参数,当做一个值
+$@ 所有参数,是一个参数列表
+$# 参数个数,不包括文件名
+
+$? 上一个命令是否正确执行,正确执行返回0,其他返回非0
+
+$$ 返回当前进程的进程号pid
+
+$！返回后台运行的进程号pid
+
+read 交互信息
+-p "提示信息"
+-t 秒数	超时跳过,程序往下走
+-s 隐藏输入
+-n 字符数 只接收指定的字符数
+
+查看用户当前shell
+echo $SHELL
+
+改变用户shell
+chsh username
+
+history 显示操作历史
+
+cat -n 显示行数
+
+ll | cat -n
+
+test [操作符] [文件目录] 测试文件
+    -d
+    -f
+    -e
+    -r
+    -w
+    -x
+    -L
+    -nt
+    -ot
+
+ 日期格式化
+ date "+%Y-%m-%d %H:%M:%S"

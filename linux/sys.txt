@@ -1,0 +1,223 @@
+#进程管理
+
+列出所有进程
+ps aux
+
+ps -le
+
+ps -le | more
+
+man ps
+
+不知道进程的作用,搜索引擎搜索下
+
+pstree
+
+pstree -p 更详细的进程目录树 主进程及子进程号都能看到
+
+top 运行之后可带以下参数：
+    -d 秒数:指定top命令每隔几秒刷新,默认每3秒刷新一次
+    -b:使用批处理模式输出,一般配合-n选项使用
+    -n 次数:指定top命令执行的次数,一般配合-b选项使用
+    ?或h:显示交互模式的帮助
+    P:以CPU使用率排序,默认此选项
+    M:以内存的使用率排序
+    N:以PID排序
+    q:退出top
+
+top -b -n 1 > top.log
+
+buffer 加速写操作
+cache 加速读操作
+
+杀死进程
+kill 根据进程号杀死单一进程
+kill -l 查看可选信号
+
+kill -1 pid
+
+kill -9 pid
+
+
+killall 根据进程名杀死进程 批量操作
+
+kill [-i] [-9] [进程名] i参数以交互形式操作(询问,选择)
+
+kill -9 -t 登录用户的TTY
+
+w 查看登陆用户
+
+
+进程优先级
+
+ps -le 结果指标 PRI NI 数字越小代表优先级越高,系统选择根据PRI+NI的值来操作
+
+用户只能修改NI的值,NI的取值范围是-20~19
+
+普通用户调整NI的范围0~19,只能调整自己进程的优先级,只能升不能降,如果原值为0只能调整为大于0的值
+
+只有root用户才能调整负值,root可以调整任何用户的进程
+
+nice命令修改,nice命令只能给新执行的进程修改NI值,而不能是已经存在的进程
+
+nice -n NI值 命令
+
+比如修改httpd的NI值,需要先停止httpd,在新的启动命令上修改NI值
+
+nice -n 5 service httpd start
+
+renice命令修改已经存在的进程的NI值
+
+renice -n NI值 进程号
+
+工作管理
+
+jobs [-l] 查看后台运行的任务 +表示最后一个放入后台的进程,-表示倒数第二个,其他的任务进程没有标志
+
+当前终端只能管理当前终端后台运行的任务,不能管理其他终端执行的后台任务,但mysql例外,终端关闭后后台任务也会关闭,通过ps查看不到
+
+挡在后台运行的进程,不用与用户有交互,有交互的没有意义
+
+find /usr/local/www -name sudo.txt & 任务在后台运行
+
+find /usr/local/www -name 执行之后接着按Control + Z 任务在后台暂停
+
+fg + %工作号 后台运行的进程回到前台,fg 不带参数指最新加入的后台任务
+
+bg + %工作号 前台运行的进程放入到后台,不带参数指最新加入的后台任务
+
+后台命令脱离登陆终端执行的的方法:
+
+1、/etc/rc.local 系统每次启动的时候都会执行此文件内的命令,可以在里面做些操作,比如将某个进程启动加入到此文件,就可以达到守护进程的效果
+
+还可以在此文件内写 touch /usr/local/www/logs/starttime.txt隐性辅助程序做些操作,同时还可以通过文件的修改时间知道每次系统启动的时间
+
+2、crontab定时任务
+
+3、nohup命令
+nohup 命令 &
+
+系统资源查看
+
+vmstat [刷新延时] [刷新次数]
+
+si so 交换分区读写信息,数值越大性能越差
+
+bi bo 磁盘读写信息,数值越大性能越差
+
+system 系统信息字段
+
+cpu cpu信息字段
+
+dmesg 开机时内核检测信息
+
+dmesg | grep CPU
+
+free 查看内存使用状态
+    -b 以B为单位显示
+    -k 以KB为单位显示,默认
+    -m 以MB为单位显示
+    -g 以GB为单位显示
+
+uptime
+
+uname
+    -a 查看系统所有相关信息
+    -r 查看内核版本
+    -s 查看内核名称
+
+file /bin/ls 查看操作系统位数
+
+lsb_release -a 查看发行版本
+
+lsof 列出进程打开或使用文件的信息
+lsof | more
+
+lsof [系统文件] 查看系统文件被哪个进程调用 lsof /sbin/init
+
+lsof -c httpd 查看httpd进程调用了哪些文件
+
+lsof -u root 查询某用户的进程调用的文件名
+
+
+#定时任务
+
+at一次性定时任务
+
+crontab循环定时任务
+
+chkconfig -list | grep atd 是否安装at
+
+service atd status
+
+service atd restart
+
+如果系统中有/etc/at.allow文件,那么只有写入在文件中的用户才可以使用at命令;
+
+如果系统中没有/etc/at.allow,只有/etc/at.deny那件,那么在deny文件中的用户不能使用at命令(对root用户不起作用)
+
+如果allow,deny文件都不存在,那么只有root用户才可以使用at命令
+
+使用:
+
+at now + 2 minutes 回车 接着输入要执行的命令
+at>
+
+atq 查看at任务
+
+at -c 工作号 查看任务详情
+
+at 06:00 2018-09-07
+
+atrm 工作号 删除at任务
+
+#crontab循环定时任务
+
+当前用户的定时任务:
+
+chkconfig --list | grep cron
+
+service crond status
+
+service crond restart
+
+chkconfig crond on
+
+/etc/cron.allow /etc/cron.deny文件控制命令权限
+
+crontab -l 查看当前用户的定时任务列表
+
+crontab -e 编辑当前用户的定时任务  保存退出之后才生效
+
+注意事项:
+最小单位是分,最大单位是月
+日期和星期最好不要出现在同一条命令中,容易混淆
+命令最好写绝对路径
+
+* 一个小时中的第几分,0-59
+* 一天中的第几个小时,0-23
+* 一个月当中的第几天,1-31
+* 一年中的第几月,1-12
+* 一个星期中的第几天,0-7,0和7都代表星期日
+
+0 5 * * * echo 111 > /usr/local/test.txt 每天5点整执行
+
+* 5 * * * echo 111 > /usr/local/test.txt 每天5点每分钟都会执行
+
+*/1 5 * * * echo 111 > /usr/local/test.txt 每天5点每分钟都会执行
+
+*/10 5 * * * echo 111 > /usr/local/test.txt 每天5点每10分钟会执行
+
+crontab -r 清除所有定时任务 一般用crontab -e 替代以达到清除效果
+
+系统定时任务设置:
+
+/etc/crontab 可以指定用户
+
+anacron配置(CentOs 6之后,CentOs 5是放在crontab里):可以保证在系统关机额时候错过的定时任务,可以在系统开机之后再执行
+
+/etc/anacrontab
+
+检测机制 /var/spool/anacron 目录中的各个文件会记录已经执行过的时间,通过检测时间的差值判断定时任务是否漏执行
+
+/etc/cron.[hourly,daily,monthly,weekly] 系统定时任务

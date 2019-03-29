@@ -1,0 +1,63 @@
+socket服务端脚本socket_server.php
+顺序不能乱
+1、创建套接字通讯节点socket_create()
+2、绑定接收套接字的主机和端口 socket_bind()
+3、监听套接字socket_listen
+4、接收客户端传过来的数据流socket_accept()
+<?php 
+// Socket Server
+$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+
+if(socket_bind($socket,'127.0.0.1',8888)==false){
+	echo 'Socket Server bind fail:'.socket_strerror(socket_last_error());
+}
+
+if(socket_listen($socket,4)==false){
+	echo 'Socket Server listen fail:'.socket_strerror(socket_last_error());
+}
+
+do{
+	$accept_res = socket_accept($socket);
+	if($accept_res !== false){
+		$string = socket_read($accept_res,1024);
+		echo 'Server receive is:'.$string.PHP_EOL;
+		if($string != false){
+			$return_client = 'Server receive is:'.$string.PHP_EOL;
+			socket_write($accept_res,$return_client,strlen($return_client));
+		}else{
+			echo 'socket_read is fail';
+		}
+		socket_close($accept_res);
+	}
+}while(true);
+socket_close($socket);
+
+
+
+socket客户端脚本socket_client.php
+1、创建套接字通讯节点socket_create()
+2、连接socket,socket_connect()
+3、发送数据流,socket_write()或socket_send()
+4、读取服务端返回的套接流信息,socket_read()
+<?php 
+// Socket Client
+$socket = socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+
+if(socket_connect($socket,'127.0.0.1',8888) == false){
+	echo 'connect Socket Server fail:'.socket_strerror(socket_last_error());
+}else{
+	$msg = 'hello,this is a msg from clientA';
+	if(socket_write($socket,$msg,strlen($msg)) == false){
+		echo 'fail to socket_write' . socket_strerror(socket_last_error());
+	}else{
+		echo 'client A write success'.PHP_EOL;
+		while($callback = socket_read($socket,1024)){
+			echo 'Server return msg is:'.PHP_EOL.$callback;
+		}
+	}
+}
+socket_close($socket);
+
+socket服务端脚本提倡用CLI模式执行的原因：
+端口不能重复打开,所以必须保证socket_server.php只会被执行一次
+非CLI的web方式下的php是由超时限制的

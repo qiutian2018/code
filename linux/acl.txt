@@ -1,0 +1,31 @@
+开启acl
+
+df
+
+dumpe2fs -h /dev/vda1 查看是否开启acl
+
+mount -o remount,acl / 对根目录临时挂载acl权限
+
+/etc/fstab 永久修改acl权限，修改后重启生效  !慎重修改此文件，会影响系统启动
+
+setfacl -m u:用户名:rw /av   
+
+setfacl -m g:组名:rw /av
+
+getfacl 文件名
+
+mask 最大权限
+
+setfacl -m m:rx /av 指定最大acl权限为rx
+
+setfacl -x u:用户名 /av 删除用户的acl权限
+
+setfacl -x g:组名 /ac 删除组的acl权限
+
+setfacl -n /av 删除文件的所有acl权限
+
+递归acl权限
+setfacl -m u:用户名:rw -R /av 递归权限会有权限溢出的问题  只针对当前目录下已经存在的文件
+默认acl权限
+setfacl -m d:u:用户名:rx -R /av  只针对在这之后创建的文件
+

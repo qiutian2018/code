@@ -1,0 +1,17 @@
+
+
+sudo权限 把本来只有超级用户的权限临时给普通用户使用 !慎重
+
+sudo -l当前用户的权限
+
+visudo 编辑可操作权限 实际修改的是/etc/sudoers文件
+
+文件中写的权限越详细，用户的操作权限越小
+
+-user1 ALL =/sbin/shutdown -r now  user1用户sudo之后有重启的命令
+
+-user1 ALL =/usr/sbin/useradd  user1用户sudo之后有用户创建用户的权限
+
+-user1 ALL =/usr/bin/passwd [A-Za-z] *, !/usr/bin/passwd "", !/usr/bin/passwd root  user1用户sudo之后有用户修改密码的权限，不允许给密码直接加空（passwd ""是指给当前用户修改密码，一旦普通用户sudo之后当前用户就是root,所以这里不让使用passwd ""），但不允许修改root密码
+
+网站的权限管理是否也可以借鉴linux的sudo权限管理?

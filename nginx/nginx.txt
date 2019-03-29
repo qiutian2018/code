@@ -1,0 +1,28 @@
+502 bad gateway错误
+
+因为nginx虚拟主机指定的fastcgi服务器监听的端口错了，没有接到factcgi服务器的响应，nginx配置中 fastcgi_pass 参数的值127.0.0.1:9000与fastcgi配置文件中监听的端口不一致
+配置文件/usr/local/php/etc/php-fpm.conf   将listen改为127.0.0.1:9000
+重启phpfpm即可/usr/local/php/sbin/php-fpm -R
+php-fpm 监听的端口被占用需要重启 service php-fpm stop/start/reload
+access denied 检查nginx配置，检查php.ini 中cgi.fix_pathinfo=0改为1
+
+apache与php是包含关系,在lamp中php是作为apache的一个模块运行的,而在lnmp中,php与nginx并非包含关系
+nginx是通过fastCGI与执行脚本进行通信的,php与nginx的fastCGI通信又得借助FPM(fastCGI进程管理程序)
+
+FPM要求以静态扩展的方式(编译方式)重新安装在php中,而非.so外部扩展的形式
+
+编译安装完好带FPM的php之后，需要在nginx中配置fastCGI与FPM的通信方式，在主机指令块server的location中配置fastcgi_pass规则，配置fastcgi_param 文档目录等规则
+
+fastcgi_pass 127.0.0.1:9000意即nginx将fastCGI指令传递给9000端口监听的FPM
+
+启动php-fpm
+
+重新加载nginx.conf配置，测试是否生效,phpinfo()
+
+软件开发须重测试！
+
+nginx.conf中有默认被注释的主机指令块，取消注释即可使用，软件开发也应朝着这个目标去做，做一个使用简单功能齐全的产品
+
+php-fpm 配置组注意重写规则,以及include文件
+fastcgi.conf跟fastcgi_params 文件内容是有区别的,本地mac引的是conf文件
+

@@ -1,0 +1,67 @@
+#下载phpunit5
+wget https://phar.phpunit.de/phpunit-5.phar
+
+chmod +x phpunit.phar
+
+sudo mv phpunit.phar /usr/local/bin/phpunit
+
+
+#编写单元测试文件
+
+#执行单元测试
+#单个
+phpunit --debug application/test/controller/DataTest.php
+
+phpunit --log-json phpunit-log1.json application/test/controller/DataTest.php
+
+phpunit --help
+
+#对整个目录测试
+phpunit application/test/controller/
+
+#测试的时候检查没有任何断言的测试
+phpunit --report-useless-tests application/test/controller/StackTest.php
+
+#详细信息
+phpunit --verbose file
+
+@requires extension mysqli
+@requires function ahhah
+@requires OS LINUX
+
+#数据库测试
+DbUnit
+
+composer require phpunit/dbunit -vvv
+
+#mysqldump导出xml格式数据集
+mysqldump --xml -u root -p test > /usr/local/www/mysql_test.xml
+
+
+
+#MockBuilder
+getMock()出来的对象是一个带有随机字符串的类!!!传参给其他方法的时候,一定要确保那个方法没有将参数类型限制死
+
+#SubjectTest
+被测对象仿件方法编写:将数据传给观察者
+
+1、获取一个mock观察者对象Observer,并指定可用方法,编写预期的测试结果
+
+2、获取一个被测对象Subject,绑定观察者
+
+3、被测对象调用需要测试的方法
+
+
+#bug修复
+
+当看到缺陷报告时，你可能会有尽快修复错误的冲动。经验表明，这种冲动不是好事，因为修复一个缺陷时很可能导致另外一个缺陷。
+
+下列操作可以帮你压住冲动：
+
+确认能够重现此缺陷。
+
+在代码中寻找此缺陷的最小规模表达。例如，如果在输出中有一个数字看起来不对，那么就寻找算出此数字的那个对象。
+
+编写一个目前会失败而缺陷修复后将会成功的自动测试。
+
+修复缺陷

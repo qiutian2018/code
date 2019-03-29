@@ -1,0 +1,157 @@
+光盘挂载 
+所有的rpm包都在光盘下的Packages目录
+rpm包的命名规范，名字各部分的含义
+rpm包安装： 进入包文件目录或者使用绝对路径
+rpm -ivh 包全名
+-i install安装
+-v version版本
+-h hash显示进度
+--nodepos 不检测依赖性 !杜绝使用此参数
+
+包的几种依赖关系
+树形依赖
+环形依赖
+模块依赖(库文件依赖) www.rpmfind.net查询改库文件所在的包
+
+rpm包安装较繁琐
+
+yum安装，方便快捷，但实际上安装的还是rpm包文件
+
+
+rpm包升级：
+rpm -Uvh 包全名
+-U upgrade
+
+rpm包卸载：无需指定目录 系统回去系统后台数据库找 /usr/lib/rpm下的db文件
+需要注意的是卸载的时候也有依赖性，可以使用--nodepos不检测依赖
+rpm -e 包名
+-e erase 卸载
+--nodeps 不检测依赖性
+
+包查询
+rpm -q 包名
+-q query
+
+查询所有包名
+rpm -qa
+
+rpm -qa | grep 包名
+
+rpm -qi 包名 
+rpm -qip 包全名 
+rpm -ql 包名  
+rmp -qlp 包全名
+-i information
+-p package查询未安装包信息
+-l list包文件列表 可以看到文件安装位置
+
+查询rpm包安装的系统文件属于哪个包
+rpm -qf 系统文件名
+-f 文件
+
+查询包的依赖
+rpm -qR 包名
+rpm -qRp 包全名
+-R requires查询包的依赖性
+-p package查询未安装包信息
+
+校验rpm包中的文件
+rpm -V 包名
+-V verify校验包中的文件
+校验通过无输出
+校验有输出说明文件被修改过,
+8个信息的含义：
+S文件大小是否修改
+M文件类型或权限是否被修改
+5文件md5完整性是否被修改(内容)
+D设备的主从代码是否改变
+L文件的路径是否改变
+U文件属主是否被修改
+G文件属组是否被修改
+T文件修改时间是否被修改
+
+
+rpm包中文件提取
+rpm2cpio 包全名 | cpio -idv .文件绝对路径
+rpm2cpio 将rpm包转换为cpio格式的命令
+cpio 是一个标准命令 用于创建软件档案文件和从档案文件中提取文件
+-i copy-in模式，还原
+-d 还原时自动新建目录
+-v 显示还原过程
+
+重要系统命令(文件)丢失的处理办法：
+误操作把ls命令移开了默认/bin目录
+rpm -qf /bin/ls 查询ls命令所属包 
+进入root目录
+rpm2cpio /mnt/cdrom/Paclages/coreutils-8.4-19.e16.i686.rpm | cpio -idv ./bin/ls 意即将cpm包转换成cpio格式，cpio利用管道符将读到的命令写入到./bin/ls文件中
+mp /root/bin/ls /bin/ls
+
+
+yum在线安装
+/etc/yum.repos.d/
+默认yum配置文件（网络yum源配置）
+/etc/yum.repos.d/CentOs-Base.repo
+[base]yum源
+name 名称
+mirrorlist 镜像站点
+baseurl yum源地址
+enable 默认值1生效,0不生效
+gpgcheck验证数字证书是否安全合法,1验证,0不验证
+gpgkey 证书位置
+
+yum离线安装（光盘安装）
+/etc/yum.repos.d/CentOs-Media.repo
+1、使网络yum源配置失效=>改名
+2、修改离线yum源配置文件
+3、查看是否生效=>yum list查看有哪些yum源
+
+
+yum源搜索:搜索yum服务器上的包，如果要搜索本地的包，只能通过rpm方式搜索
+yum list
+yum search 包名
+
+yum安装：
+yum -y install 包名
+-y yes自动回答yes
+install 安装
+yum -y install gcc
+
+yum升级：慎重操作=>可能需要重启，兼容性，稳定，安全性等等因素
+yum -y update 包名 !非必须升级不可，杜绝使用此命令
+
+yum -y remove 包名 !杜绝使用此命令，非常高的概率自动卸载掉系统运行所需的依赖
+
+！软件安装原则：服务器使用最小化安装，用什么软件装什么，尽量不卸载
+
+
+yum grouplist
+
+yum groupinstall 组包名
+
+LANG = en_us
+LANG = zh_CN.utf8
+
+
+rpm包安装位置 一般使用默认安装位置 启动的时候使用service 命令启动
+默认服务位置 /etc/rc.d/init.d
+service搜索的目录是/etc/rc.d/init.d
+
+源码包 安装在指定位置中 /usr/local/软件名  (CentOs) 源码包安装的服务不能被服务管理命令管理，因为没有安装到默认目录中，所以只能使用绝对路径进行服务的管理
+
+安装位置的不同带来的是启动方式(命令)的不同
+
+
+源码包安装：CentOs下源码包目录一般在/usr/local/src 安装目录一般在/usr/local
+1、安装gcc编译器
+2、下载源码包(官方网站下载)
+3、解压源码包
+4、进入解压后的目录
+5、./configure --参数 配置参数
+6、make 编译 
+如有错误的时候 make clean 清除已经编译的文件，缓存之类的，然后在执行make 重来一次
+7、make install 编译安装
+查看软件启动命令：在源码包目录下查看INSTALL文件
+
+源码包删除：源码包没有删除命令，删除安装目录，即是卸载，无残留
+
+pkill -9 php-fpm 强制杀死php-fpm进程

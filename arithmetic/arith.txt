@@ -1,0 +1,21 @@
+#########算法
+#谁是小偷
+A说：“我不是小偷。”    x !=0
+B说：“C 是小偷。”     x = 2
+C说：“小偷肯定是 D。”  x = 3
+D说：“C 是在冤枉人。”  x != 3
+
+function whoisthief()
+{
+    $A = ord('A');
+    for ($x = 0; $x < 4; ++$x) {
+        $dis_a = $x != 0 ? 1 : 0;
+        $dis_b = $x == 2 ? 1 : 0;
+        $dis_c = $x == 3 ? 1 : 0;
+        $dis_d = 1 - $dis_c;
+        if (($dis_a + $dis_b + $dis_c + $dis_d) == 3) {
+            echo chr($A + $x) . ' is thief';
+            return;
+        }
+    }
+}

@@ -1,0 +1,34 @@
+mu_substr()使用的时候传字符参数编码,确保截取的时候不因编码问题导致乱码,mb_substr('我是一个有灵魂的字符串，不要轻易截断',0,10,'utf-8')
+
+文件为纯php代码的时候尽量省略结束标记,因为php结束标记之后如果意外加入了空格或者换行符,会导致php输出这些空白,特别是树勇输出缓冲时,造成不必要的干扰
+
+处于条件语句中间的例外,在php结束标记时并不会远洋输出,而会根据条件判断来决定哪些输出,哪些跳过:
+<?php
+$expression = true;
+if ( $expression  ==  true ):  ?>
+  This will show if the expression is true.
+<?php else: ?>
+  Otherwise this will show.
+<?php endif; ?>
+
+
+if(xx){
+    return [xx,40001];
+}
+
+if(xx2){
+    return [xx2,40002];
+}
+
+
+try{
+    if(xx){
+        throw new Exception('xx',40001);
+    }
+
+    if(xx2){
+        throw new Exception('xx2',40002);
+    }
+}catch(Exception e){
+    return [e->getMessage(),e->getCode()];
+}

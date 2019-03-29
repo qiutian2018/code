@@ -1,0 +1,39 @@
+#CentOs 7.2 搭建docker环境
+#安装CentOS-Extra软件源的docker
+yum install docker-io -y
+#查看版本
+docker -v
+#启动docker
+service docker start
+#设置开机启动
+chkconfig docker on
+#配置docker
+echo "OPTIONS='--registry-mirror=https://mirror.ccs.tencentyun.com'" >> /etc/sysconfig/docker
+systemctl daemon-reload
+service docker restart
+#下载官方的CentOs镜像到本地
+docker pull centos
+#镜像列表
+docker images
+#运行容器 centos，此时已经进入容器 
+docker run -it centos /bin/bash
+#在容器内执行任意命令不会影响宿主主机
+mkdir -p /data/simple_docker
+ls /data
+exit
+ls /data
+#查看所有容器信息,获取容器的id
+docker ps -a
+#保存镜像 保存之后可以用docker images查看
+docker commit -m="自定义备注信息" 要保存的CONTAINER_ID 要保存的IMAGE
+
+##进入某个容器
+
+1：
+docker start containerID  启动容器
+docker attach containerID  刚方法进入之后，exit退出就会导致容器stop
+
+2：docker exec -it containerID /bin/bash   这个命令exit退出，ok容器还在运行
+
+#查看容器信息
+docker inspect containerID

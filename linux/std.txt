@@ -1,0 +1,31 @@
+#三类特殊文件
+
+0 stdin 保存在硬盘中
+
+1 stdout 默认输出在终端
+
+2 stderr 默认输出在终端
+
+如果要将错误文件保存在文件中 需要加上类型标志
+
+asdfasfdad 2> info.txt  asdfasfdad是不存在的命令,执行此操作的时候是一串错误信息
+
+
+locate 在系统数据库中查找指定文件
+
+updatedb 默认每天执行一次,将系统文件写入系统数据库中
+
+locate 查找不到刚刚创建的文件,因为没有加入到系统数据库中,可以手动执行updatedb更新下系统数据库
+
+find 在指定目录下查找指定文件
+
+grep
+
+开源库命令 happygrep
+
+开源编辑器 tmux
+
+rsync 数据传输
+
+书籍 linux命令行
+

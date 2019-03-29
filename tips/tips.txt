@@ -1,0 +1,11 @@
+接手tp项目
+找到入口文件index.php，看是否启用debug模式，给他打开。
+找到全局配置文件，修改数据库连接信息。
+
+zend studio配置www目录工作间
+1、file->switch workspace->other->选择www目录
+2、new->project->取一个项目名，就会再www目录下创建一个项目文件夹
+3、导入本地代码文件到刚刚创建的这个项目里：选择该项目右键import->filesystem->选择要导入的文件目录 finish即可
+
+回车分页跳转
+<input type="text" size="5" class="inputText" onkeydown="if(event.keyCode==13) {window.location=\''.$mpurl.$p.'='.'\'+this.value; doane(event);}" />

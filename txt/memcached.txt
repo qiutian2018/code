@@ -1,0 +1,17 @@
+memcached文件要放到到php的安装目录
+windows卸载服务
+sc delete memcached
+
+linux安装memcached
+安装依赖libevent
+安装memcached
+添加独立用户管理 memcached memcached123
+useradd memcached
+passwd memcached ====>memcached123
+加入环境变量 vi /etc/profile
+加入到守护进程 vi /etc/rc/local
+#run memcached
+/usr/local/memcached/bin/memcached -d -u root
+
+memcache，不起作用，重启php-fpm
+/etc/init.d/php-fpm restart

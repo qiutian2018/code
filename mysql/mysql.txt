@@ -1,0 +1,48 @@
+mysqldump -u 用户名 -p 数据库名 > 导出的路径/sql.sql
+执行此命令了时候不需要进入mysql！！！mysqldump是linux的一个工具 跟mysql没关系
+
+如果该用户没有备份权限可以使用skip命令跳过相关权限 --skip-lock-tables
+
+只备份数据表结构
+mysqldump --opt -d 数据库名 -u 用户名 -p > 存放目录/aa.sql
+
+导入sql文件
+进入mysql 执行source命令,如果sql文件中没有创建数据库命令需要先选择数据库,use 数据库名
+source /www/web/vote_rock1/jiegou.sql
+
+mysql中查看某个数据库大小
+进入information_schema数据库，查询
+select concat(round(sum(DATA_LENGTH/1024/1024),2),'MB') as data from tables where table_schema='article';
+
+sql拼接，%外面需用"括起来，诸如："%关键字%"
+$search = $_GET['search'];
+if(!empty($search)){
+	$_where .= ' and title like "%' . "{$search}" . '%"';
+}
+
+mysql字符计算与字段定义：CHAR_LENGTH()函数计算字符数,LENGTH()计算字节数,varchar(20) 指允许20个长度的字符,也就是CHAR_LENGTH()统计出来的数值不能超过20。CHAR_LENGTH()对应于php中的mb_strlen(),LENGTH()对应于php中的strlen()。Yii模型中rules规则字段length,max规则可以从yiilite.php CStringValidator类中找到答案,跟运行环境mb库是否安装以及字符编码设置有关。
+
+update `table_name` set `col_name` = REPLACE(`col_name`,'aaa','bbb');
+
+windows下:
+安装多个版本的mysql时候，需要先将原来的mysql服务删除，sc delete 后面跟注册的服务名称
+sc delete MySQL 或者sc delete MySQL56
+将mysqld移除
+mysqld --remove MySQL
+
+然后才开始重新装新的mysql
+
+
+sql5.7之后默认sql_mode 严格模式导致group by 分组的时候 420000错误
+1、select @@global.sql_mode 查看模式
+2、set @@global.sql_mode 或者 修改my.cnf配置sql_mode 把严格模式去掉
+3、重启mysql
+
+#使用别用的时候注意系统保留字
+#这里group别名需用反引号，防止被系统认为是group by的语法错误
+select user.nickname,help.reward_money,help.reward_date,help.use_date,exhi.name
+from wx_exhibition_help as help
+LEFT JOIN wx_exhibition_group as `group` ON help.red_group_id=group.id
+LEFT JOIN wx_exhibition as exhi ON group.ex_id=exhi.id
+LEFT JOIN wx_users as user ON help.openid=user.openid
+where help.reward_money>0 order by help.id desc;
