@@ -7,7 +7,9 @@ git remote update origin --prune
 # 远程分支拉取的本地并新建一个分支
 git checkout -b localBranchName origin/branchName
 # 查看本地tag列表
-git tag --list
+git tag --list 或者git tag -l
+# tag列表及注释信息
+git tag -l -n
 # 同步远程tag到本地
 git fetch -t
 # 打tag
@@ -16,3 +18,7 @@ git tag -a 'v20190426.1.0' -m '我是tag描述...'
 git push origin --tags
 # 查看远程仓库地址
 git remote -v
+# 删除本地tag
+git tag -d tagId
+# 查看某个文件代码变动(行级)
+git blame filepath
