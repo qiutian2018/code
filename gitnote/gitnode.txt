@@ -26,3 +26,9 @@ git blame filepath
 git branch -D branchName
 # 删除远程分支
 git remote update origin --prune
+#分支提交以及合并历史
+1、切换到某个分支(或者某个tag或者某个commit)
+2、git log --oneline --graph
+3、分析:
+起点就是当前分支(或者某个tag或者某个commit)的提交依赖线的最后一个节点,顺着线往下走,遇到星号即为父节点
+找其他节点的依赖线,一样是顺着线往下走,遇到星号即为父节点
