@@ -34,3 +34,17 @@ git remote update origin --prune
 3、分析:
 起点就是当前分支(或者某个tag或者某个commit)的提交依赖线的最后一个节点,顺着线往下走,遇到星号即为父节点
 找其他节点的依赖线,一样是顺着线往下走,遇到星号即为父节点
+# 移动HEAD到某个提交
+git checkout HEAD~1
+# 改变某个分支的引用到某个提交,可以用commitId或者当前HEAD引用的相对位置
+git branch -f master commitId或者git branch -f master HEAD~3
+# 撤销本地分支修改,撤销的修改还在暂存区
+git checkout localBranch
+git reset HEAD
+# 交互式rebase,从HEAD前4个提交中选取提交记录
+git rebase -i HEAD~4
+# 撤销修改并产生一个撤销变动的提交,撤销的修改不在暂存区,已经将撤销生成一个新的提交id了
+git checkout localBranch2
+git revert HEAD
+# 整理提交,将某些提交复制当前位置(HEAD)下面
+git cherry-pick commitId1 commitId2 commitId3
