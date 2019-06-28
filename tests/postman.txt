@@ -1,0 +1,68 @@
+# postman 测试用例
+# postman的测试用例本质上是js语法的测试脚本
+# 测试脚本可以写在collection里,也可以写在文件夹里,选择collection(或者folder)点击三点号...,从菜单中选择edit。
+# 测试脚本还可以只针对某个接口写
+# 时序图
+1、collect pre_request 脚本
+2、folder pre_request 脚本
+3、request 请求
+4、collect test 脚本
+5、folder test脚本
+6、request test脚本
+
+
+####pre_request 脚本####
+// 预处理脚本,定义一个局部变量goodsId,请求使用的时候使用双大括号占位符{{goodsId}}
+pm.enviroment.set("goodsId",1049);
+// 定义全局变量
+pm.variables.set("goodsId",1111);
+
+// 请求里面用这个参数
+{
+	"id":{{goodsId}}
+}
+
+####test 脚本####
+
+# 请求是否成功 use pm.response.to.have
+pm.test("request is ok",function(){
+	pm.response.to.have.status(200);
+})
+# 返回是否有错误 use response assertions
+pm.test("response no error",function(){
+	pm.response.to.not.be.error;
+	// 返回的json结构是否有空字符串""
+	pm.response.to.have.jsonBody("");
+	// 返回的json结构是否有msg
+	pm.response.to.have.jsonBody("msg");
+	// 返回的json结构中是否有data.res_code
+	pm.response.to.have.jsonBody("data.res_code");
+	// 返回的json结构中没有data.res_code2
+	pm.response.to.not.have.jsonBody("data.res_code2");
+	// 返回体中是否包含某个字符 这里不能去掉expect而直接使用pm.response.text()去用,因为include()是一个断言方法
+	pm.expect(pm.response.text()).to.include('aaa');
+})
+# 断言response返回格式
+pm.test("response is ok",function(){
+	// 请求是否成功
+	pm.response.to.be.ok;
+	// 返回是否是一个有效的json body
+	pm.response.to.be.withBody;
+	// 返回是否是一个json数据
+	pm.response.to.be.json;
+})
+
+# 返回值是否符合要求
+pm.test("response res_code is 40001",function(){
+	var jsonData = pm.response.json();
+	// 指定具体值
+	pm.expect(jsonData.data.res_code).to.eql(40001);
+	// 指定值范围
+	pm.expect(jsonData.data.res_code).to.be.oneOf([40001,80001]);
+	// 列表第一项name是否叫张三
+	pm.expect(jsonData.data.data[0].name.to.eql("张三")
+	// 返回是否有age属性
+	pm.expect(jsonData.data.data[0]).to.have.property('age');
+})
+
+#
