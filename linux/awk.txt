@@ -1,0 +1,3 @@
+#awk
+awk '{print $1}' nginx.log > ip.txt
+awk '{print $2}' ip.txt | sort | uniq -c | sort -n -r -k 1 > ip_2.txt

@@ -1,0 +1,4 @@
+# 微信支付调试
+NATIVE 支付 统一下单接口,trade_type为NATIVE时会在成功的时候返回code_url
+该code_url可以直接在微信里点击弹起微信支付窗口
+可进一步用Qrcode库将该url生成一个二维码
