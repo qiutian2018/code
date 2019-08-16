@@ -46,3 +46,11 @@ LEFT JOIN wx_exhibition_group as `group` ON help.red_group_id=group.id
 LEFT JOIN wx_exhibition as exhi ON group.ex_id=exhi.id
 LEFT JOIN wx_users as user ON help.openid=user.openid
 where help.reward_money>0 order by help.id desc;
+
+
+索引的使用
+查询的时候如果跟字段定义类型对不上的话，不会走索引，
+name 是varchar类型 但是 where name=1 这时候索引不生效 应该用where name='1'
+
+建立多个索引的时候，注意查询冲突，有可能不走索引
+explain 分析下 看 key到底走的哪个索引
