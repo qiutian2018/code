@@ -131,3 +131,9 @@ ctrl+t 回到上一次查看位置
 
 查询多个关键字,注意|两边不要有空格
 grep -E 'a|b|c'
+
+黑洞文件(位桶)/dev/null 就像一个黑洞一样，任何写入信息都不会记录，也经常用于清理垃圾数据而不是删除文件
+cat not_exist.txt > /dev/null cat一个不存在的文件,报错
+cat not_exist.txt 2> /dev/null cat一个不存在的文件,但不报错
+cat /dev/null > exist_a.txt 清空已经存在的exist_a.txt文件
+cat /dev/null > not_exist_b.txt 创建一个不存在的not_exist_b.txt文件
