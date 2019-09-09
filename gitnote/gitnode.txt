@@ -48,3 +48,7 @@ git checkout localBranch2
 git revert HEAD
 # 整理提交,将某些提交复制当前位置(HEAD)下面
 git cherry-pick commitId1 commitId2 commitId3
+# 查看提交日志 概要信息、详细变动
+git log [-p]
+# 有针对性的查看提交日志
+git log [-p] filePath(or filePathDir or tagName or commitID or branchName)

