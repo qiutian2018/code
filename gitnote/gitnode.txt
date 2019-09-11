@@ -52,3 +52,7 @@ git cherry-pick commitId1 commitId2 commitId3
 git log [-p]
 # 有针对性的查看提交日志
 git log [-p] filePath(or filePathDir or tagName or commitID or branchName)
+# 本地分支与远程分支关联关系
+git branch -vv
+# 排他式分支合并,合并其他分支,如果发现冲突,丢弃otherBranch分支修改
+git merge -s ours otherBranch
