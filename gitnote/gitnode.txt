@@ -41,6 +41,7 @@ git branch -f master commitId或者git branch -f master HEAD~3
 # 撤销本地分支修改,撤销的修改还在暂存区
 git checkout localBranch
 git reset HEAD
+git reset HEAD filePath
 # 交互式rebase,从HEAD前4个提交中选取提交记录
 git rebase -i HEAD~4
 # 撤销修改并产生一个撤销变动的提交,撤销的修改不在暂存区,已经将撤销生成一个新的提交id了
@@ -54,5 +55,5 @@ git log [-p]
 git log [-p] filePath(or filePathDir or tagName or commitID or branchName)
 # 本地分支与远程分支关联关系
 git branch -vv
-# 排他式分支合并,合并其他分支,如果发现冲突,丢弃otherBranch分支修改
+# 排他式分支合并,合并其他分支,丢弃otherBranch分支修改,
 git merge -s ours otherBranch
