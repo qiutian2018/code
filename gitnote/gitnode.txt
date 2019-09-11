@@ -55,5 +55,9 @@ git log [-p]
 git log [-p] filePath(or filePathDir or tagName or commitID or branchName)
 # 本地分支与远程分支关联关系
 git branch -vv
-# 排他式分支合并,合并其他分支,丢弃otherBranch分支修改,
+# 排他式分支合并,合并其他分支,丢弃otherBranch分支任何(不管有无冲突)修改,实际上是什么也没有操作,只是增加了一个commitId
 git merge -s ours otherBranch
+# 交互排他式分支合并,合并其他分支,有冲突的地方,丢弃otherBranch分支修改,以自己分支为准
+git merge -X ours otherBranch 等价于 git merge -s recursive -X ours otherBranch
+# 交互排己式分支合并,合并其他分支,有冲突的地方,丢弃自己分支的,以otherBranch分支修改为准
+git merge -X theirs otherBranch 等价于 git merge -s recursice -X theirs otherBranch
