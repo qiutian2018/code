@@ -54,3 +54,6 @@ name 是varchar类型 但是 where name=1 这时候索引不生效 应该用wher
 
 建立多个索引的时候，注意查询冲突，有可能不走索引
 explain 分析下 看 key到底走的哪个索引
+
+大表查数据,杜绝查全表,一般要查的数据是某个时间段内的,那么即可以根据主键id剔除掉非必查数据
+select * from table_xx where id>某个值 and ...

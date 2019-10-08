@@ -44,3 +44,9 @@ dump(eval($a));
 
 
 //echo pack('H*',706870);
+
+// 文件包含目录
+get_include_path();
+
+// 查看php配置文件路径
+php --ini
