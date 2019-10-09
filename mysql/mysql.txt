@@ -59,8 +59,15 @@ explain 分析下 看 key到底走的哪个索引
 select * from table_xx where id>某个值 and ...
 
 优化手段
+show variables like '%pro%';
+help profile;
+set profiling=1;
 explain select * from table_xx where id<100;
 select * from table_xx where id<100;
 set profiling=1;
+所有查询语句列表
 show profiles;
-
+某条查询语句的性详细信息耗时
+show profile for query {queryId}
+更详细的耗时信息
+show profile block io,cpu,memory,swaps,context switches,source for query {queryId};
