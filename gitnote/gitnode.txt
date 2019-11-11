@@ -61,3 +61,41 @@ git merge -s ours otherBranch
 git merge -X ours otherBranch 等价于 git merge -s recursive -X ours otherBranch
 # 交互排己式分支合并,合并其他分支,有冲突的地方,丢弃自己分支的,以otherBranch分支修改为准
 git merge -X theirs otherBranch 等价于 git merge -s recursice -X theirs otherBranch
+#查看提交信息object内容
+git cat-file -p commitId
+#分支的合并
+合并两个基于某个基础提交还分开的分支，并不是移动分支指针就能解决问题的，它需要一种合并策略。
+首先，我们需要明确的是谁和谁的合并，是 2，3 与 4，5，6的合并吗？说到分支，我们总会联想到线，就会认为是线的合并。
+其实不是，真实合并的是 3 和 6。因为每一次提交都包含了项目完整的快照，即合并只是 tree 与 tree 的合并。
+我们可以先想一个简单的算法。用来比较3和6。
+但是我们还需要一个比较的标准，如果只是3和6比较，那么3与6相比，添加了一个文件，也可以说成是6与3比删除了一个文件，这无法确切表示当前的冲突状态。
+因此我们选取他们的两个分支的分歧点（merge base）作为参考点，进行比较。
+比较时，相对于 merge base（提交1）进行比较。
+首先把1、3、6中所有的文件做一个列表，然后依次遍历这个列表中的文件。
+现在我们拿列表中的一个文件进行举例，把在提交1、3、6中的该文件分别称为版本1、版本3、版本6。
+版本1、版本3、版本6的 sha-1 值完全相同，这种情况表明没有冲突
+版本3或6至少一个与版本1状态相同（指的是sha-1值相同或都不存在），这种情况可以自动合并。比如1中存在一个文件，在3中没有对该文件进行修改，而6中删除了这个文件，则以6为准就可以了
+版本3或版本6都与版本1的状态不同，情况复杂一些，自动合并策略很难生效，需要手动解决。我们来看一下这种状态的定义。
+冲突状态定义：
+1 and 3: DELETED_BY_THEM;
+1 and 6: DELETED_BY_US;
+3 and 6: BOTH_ADDED;
+1 and 3 and 6: BOTH_MODIFIED
+我们拿第一种情况举例，文件有两种状态 1 和 3，1 表示该文件存在于 commit 1（也就是MERGE_BASE），3 表示该文件在 commit 3 （master 分支）中被修改了，没有 6，也就是该文件在 commit 6（feature 分支）被删除了，总结来说这种状态就是 DELETED_BY_THEM。
+可以再看一下第四种情况，文件有三种状态 1、3、6，1 表示 commit 1（MERGE_BASE）中存在，3 表示 commit 3（master 分支）进行了修改，6 表示（feature 分支）也进行了修改，总结来说就是 BOTH_MODIFIED（双方修改）。
+遇到不可自动合并冲突时，git会将这些状态写入到暂存区。与我们讨论不同的是，git使用1，2，3标记文件，1表示文件的base版本，2表示当前的分支的版本，3表示要合并分支的版本。
+
+#变基操作rebase,慎用!!!禁止在master分支上使用rebase操作(git checkout master && git rebase dev)!!!可以在本地分支使用rebase(git checekout localDevBranch && git rebase master)
+merge这种方式在某些情况下使用起来不太方便，比如当我们创建了 pr、mr 或者 将修改补丁发送给管理者，管理者在合并操作中产生了冲突，还需要去解决冲突，这无疑增加了他人的负担。
+使用 rebase 可以解决这种问题。
+基于commitId2迁出来的两个分支:
+branchA: commitId3,commitId4,commitId5
+branchB: commitId6,commitId7
+git checkout branchB
+git rebase branchA(把当前的branchB分支的所有提交移到branchA之后)
+rebase 会把从 Merge Base 以来的所有提交，以补丁的形式一个一个重新达到目标分支上。这使得目标分支合并该分支的时候会直接 Fast Forward，即不会产生任何冲突。
+提交历史是一条线，这对强迫症患者可谓是一大福音。rebase之后变成commitId2(公共commit),commitId3,commitId4,commitId5,commitId6',commitId7'。
+这里可以看到rebase 的一个缺点，那就是修改了分支的历史提交。如果已经将分支推送到了远程仓库，会导致无法将修改后的分支推送上去，必须使用 -f 参数（force）强行推送。
+所以使用rebase最好不要在公共分支上进行操作!!!
+为什么不要再公共分支使用rebase?
+因为往后放的这些 commit 都是新的,这样其他从这个公共分支拉出去的人，都需要再rebase,相当于你rebase东西进来，就都是新的commit了。
