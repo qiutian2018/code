@@ -71,3 +71,12 @@ show profiles;
 show profile for query {queryId}
 更详细的耗时信息
 show profile block io,cpu,memory,swaps,context switches,source for query {queryId};
+
+连续的区间用field between 100 and 200 或者 a>=100 and <=200
+
+分析索引命中
+explain select * from table where id>100 and type=2 and ...
+
+flush status;
+select * from table where id>100 and type=2 and ...
+show status like 'Handler_read%';
