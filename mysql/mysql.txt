@@ -54,6 +54,8 @@ name 是varchar类型 但是 where name=1 这时候索引不生效 应该用wher
 
 建立多个索引的时候，注意查询冲突，有可能不走索引
 explain 分析下 看 key到底走的哪个索引
+最左前缀原则
+mysql会一直向右匹配直到遇到范围查询>、<、between、like就停止匹配，所以建联合索引的时候将这些范围查询的字段放在最后
 
 大表查数据,杜绝查全表,一般要查的数据是某个时间段内的,那么即可以根据主键id剔除掉非必查数据
 select * from table_xx where id>某个值 and ...
@@ -80,3 +82,10 @@ explain select * from table where id>100 and type=2 and ...
 flush status;
 select * from table where id>100 and type=2 and ...
 show status like 'Handler_read%';
+
+查看mysql配置文件
+mysql --verbose --help | grep my.cnf
+show variables like 'slow_%';
+show variables like '%query%';
+brew services restart mysql@5.7
+
